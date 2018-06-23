@@ -13,5 +13,5 @@ script:
   - mkdir build
   - cd build
   - cmake -G Ninja ../llvm
-  - ninja
-  - ninja check-all
+  - ninja -j 4
+  - ninja -j 4 check-all
