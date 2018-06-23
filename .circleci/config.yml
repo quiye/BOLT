@@ -14,7 +14,7 @@ jobs:
           command: |
               git clone https://github.com/llvm-mirror/llvm llvm
               cd llvm/tools
-              it checkout -b llvm-bolt f137ed238db11440f03083b1c88b7ffc0f4af65e
+              git checkout -b llvm-bolt f137ed238db11440f03083b1c88b7ffc0f4af65e
               mv ../BOLT llvm-bolt
               cd ..
               patch -p 1 < tools/llvm-bolt/llvm.patch
