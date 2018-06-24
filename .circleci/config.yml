@@ -17,6 +17,7 @@ jobs:
               git checkout -b llvm-bolt f137ed238db11440f03083b1c88b7ffc0f4af65e
               git clone https://github.com/facebookincubator/BOLT llvm-bolt
               cd ..
+              yum install -y patch
               patch -p 1 < tools/llvm-bolt/llvm.patch
               cd ..
               mkdir build
