@@ -1,0 +1,38 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: centos:centos7
+    steps:
+      - run:
+          name: git ssh wget
+          command: |
+              yum install -y git ssh wget
+      - checkout
+      - run:
+          name: build
+          command: |
+              git clone https://github.com/llvm-mirror/llvm llvm
+              cd llvm/tools
+              git checkout -b llvm-bolt f137ed238db11440f03083b1c88b7ffc0f4af65e
+              git clone https://github.com/facebookincubator/BOLT llvm-bolt
+              cd ..
+              yum install -y patch
+              patch -p 1 < tools/llvm-bolt/llvm.patch
+              cd ..
+              mkdir build
+              cd build
+              yum groupinstall -y "Development Tools"
+              yum install -y emacs-filesystem vim-filesystem
+              wget http://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/n/ninja-build-1.7.2-2.el7.x86_64.rpm
+              rpm -Uvh ninja*rpm
+              yum install -y ninja-build
+              wget https://cmake.org/files/v3.11/cmake-3.11.4-Linux-x86_64.tar.gz
+              tar -zxf cmake-3.11.4-Linux-x86_64.tar.gz
+              time cmake-3.11.4-Linux-x86_64/bin/cmake -G Ninja ../llvm
+              ninja-build -j 4
+      - run:
+          name: tests
+          command: |
+              cd build
+              time ninja-build -j 4 check-all
